@@ -42,7 +42,7 @@ public class Weights {
         WebElement weightButton = driver.findElement(By.id("weigh"));
         WebElement resultSignWebElement = driver.findElement(By.cssSelector("div.result button"));
 
-        // Step 1: put 0,1,2 to the left, put 3,4,5 to the right.
+        // Put 0,1,2 to the left, put 3,4,5 to the right.
         leftCell0.sendKeys("0");
         leftCell1.sendKeys("1");
         leftCell2.sendKeys("2");
@@ -51,19 +51,19 @@ public class Weights {
         rightCell2.sendKeys("5");
         weightButton.click();
 
-        // Step 2: wait updated result sign.
+        // Wait updated result sign.
         // Criteria: log is updated with a new line.
         WebDriverWait wait = new WebDriverWait(driver, 20);
         boolean logUpdated = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div li:nth-child(1)"))) != null;
         if (!logUpdated) throw new RuntimeException("Timeout.");
 
-        // Step 3: take result from the result sign.
+        // Take result from the result sign.
         // Assumption: log and result sign are updated in the same time, no race condition check.
         String resultSign = resultSignWebElement.getText();
         System.out.println("(3 bars) left " + resultSign + " right");
         int ind;
 
-        // Step 4: analyse result
+        // Analyse result
         // Assumption: according result sign make decision which next 3 bars are needed to be analysed or throw exception.
         if (resultSign.equals(EQUAL_SIGN)) {
             ind = 6;
@@ -73,7 +73,7 @@ public class Weights {
             ind = 0;
         } else throw new RuntimeException("Unknown sign.");
 
-        // Step 5: erase data from the previous run.
+        // Erase data from the previous run.
         // Assumption: erasing data with backspace key as users supposed to do, clearing inputs doesn't work because of javascript.
         leftCell0.sendKeys(Keys.BACK_SPACE);
         leftCell1.sendKeys(Keys.BACK_SPACE);
@@ -82,18 +82,18 @@ public class Weights {
         rightCell1.sendKeys(Keys.BACK_SPACE);
         rightCell2.sendKeys(Keys.BACK_SPACE);
 
-        // Step 6: put one bar on the left, put one bar on the right.
+        // Put one bar on the left, put one bar on the right.
         leftCell0.sendKeys(String.valueOf(ind));
         rightCell0.sendKeys(String.valueOf(ind + 1));
         weightButton.click();
 
-        // Step 7: wait updated result sign.
+        // Wait updated result sign.
         // Log and result sign are updated at the same time.
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div li:nth-child(2)")));
         resultSign = resultSignWebElement.getText();
         System.out.println("(1 bar) left " + resultSign + " right");
 
-        // Step 8: analyse result and make decision which bar has minimum weight. Log is updated
+        // Analyse result and make decision which bar has minimum weight. Log is updated
         int min_ind;
         if (resultSign.equals(EQUAL_SIGN)) {
             min_ind = ind + 2;
@@ -104,7 +104,7 @@ public class Weights {
         }
         System.out.println("Index of bar with min weight is: " + min_ind);
 
-        // Step 9: click bar to check result.
+        // Click bar to check result.
         WebElement min_weight_bar = driver.findElement(By.cssSelector("div.coins button[id$='"+ min_ind +"']"));
         min_weight_bar.click();
 //        driver.quit();

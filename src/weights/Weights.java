@@ -88,7 +88,7 @@ public class Weights {
         weightButton.click();
 
         // Wait updated result sign.
-        // Log and result sign are updated at the same time.
+        // Assumption: log and result sign are updated at the same time.
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div li:nth-child(2)")));
         resultSign = resultSignWebElement.getText();
         System.out.println("(1 bar) left " + resultSign + " right");
